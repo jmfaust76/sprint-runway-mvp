@@ -4,10 +4,15 @@ Run:  streamlit run src/app.py
 
 All math lives in forecast_engine; this file only handles controls, caching and display.
 Full names appear here (local only); exports use member_id.
+
+Public demo (e.g. Streamlit Community Cloud): set SPRINTRUNWAY_DEMO=1 as an environment variable
+or secret. The app is then locked to the bundled sample data, and controls that read or write the
+server's filesystem are hidden.
 """
 
 from __future__ import annotations
 
+import os
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -27,6 +32,21 @@ FTE_COLOR, CONTRACTOR_COLOR = SERIES_COLORS[0], SERIES_COLORS[1]
 TIER_LABEL = {"Critical": "🔴 Critical", "Warning": "🟠 Warning", "Healthy": "🟢 Healthy",
               "Insufficient Data": "⚪ Insufficient Data"}
 GRID = "rgba(128,128,128,0.18)"
+REPO_URL = "https://github.com/jmfaust76/sprint-runway-mvp"
+
+
+def _demo_mode() -> bool:
+    """True when SPRINTRUNWAY_DEMO is set to 1/true/yes/on (environment variable first, then st.secrets)."""
+    raw = os.environ.get("SPRINTRUNWAY_DEMO")
+    if raw is None:
+        try:
+            raw = st.secrets.get("SPRINTRUNWAY_DEMO")
+        except Exception:  # no secrets file (normal for local runs)
+            raw = None
+    return str(raw or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+DEMO_MODE = _demo_mode()
 
 
 # --------------------------------------------------------------------------------------
@@ -67,7 +87,11 @@ with st.sidebar:
                       help="Drop contractor burn after contract_end_date. Velocity is not reduced, "
                            "so scope fit becomes an upper bound.")
     st.divider()
-    data_dir = Path(st.text_input("Data directory", str(fe.DEFAULT_DATA_DIR)))
+    if DEMO_MODE:
+        data_dir = fe.DEFAULT_DATA_DIR
+        st.caption("Demo: fixed to the bundled sample data.")
+    else:
+        data_dir = Path(st.text_input("Data directory", str(fe.DEFAULT_DATA_DIR)))
     output_dir = fe.DEFAULT_OUTPUT_DIR
     if st.button("Reload data", icon="🔄"):
         st.cache_data.clear()
@@ -92,6 +116,9 @@ P, K = result.products, result.kpis
 # --------------------------------------------------------------------------------------
 st.title("SprintRunway AI")
 st.caption("Development team budget, runway & turnover-risk forecast")
+if DEMO_MODE:
+    st.info(f"**Demo with fictional sample data.** To use your own data, run SprintRunway locally; "
+            f"see the [README on GitHub]({REPO_URL}).", icon="🧪")
 
 synced = [t for t in P["last_synced_utc"] if t is not None]
 synced_txt = f"{max(synced):%Y-%m-%d %H:%M} UTC" if synced else "unknown"
@@ -129,8 +156,12 @@ k4.caption(f"Slip case: {K['slip_unfunded_backlog_points']:,.0f} pts")
 # Executive delta summary
 # --------------------------------------------------------------------------------------
 st.subheader("What Changed / Executive Delta Summary")
-for line in result.delta_summary:
-    st.markdown(f"- {line}")
+if DEMO_MODE:
+    st.markdown("- Not available in the demo: this section compares each export with the previous one, "
+                "and the demo doesn't save exports.")
+else:
+    for line in result.delta_summary:
+        st.markdown(f"- {line}")
 st.markdown("**Key drivers**")
 for line in fe.key_drivers(P):
     st.markdown(f"- {line}")
@@ -290,12 +321,17 @@ for _, p in P.iterrows():
 # Exports (member_id only)
 # --------------------------------------------------------------------------------------
 st.subheader("Exports")
-st.caption("Exports use member_id only — no personal names. Writing to /output also saves the baseline "
-           "for the next run's delta summary.")
-e1, e2, e3 = st.columns(3)
-if e1.button("Write reports to /output", type="primary", icon="💾"):
-    paths = fe.write_outputs(result, bundle, output_dir)
-    st.success(f"Wrote {paths['report'].name} and {paths['forecast'].name} to {output_dir}")
+if DEMO_MODE:
+    st.caption("Exports use member_id only — no personal names. In the demo, reports download to your "
+               "computer; nothing is saved on the server.")
+    e2, e3 = st.columns(2)
+else:
+    st.caption("Exports use member_id only — no personal names. Writing to /output also saves the baseline "
+               "for the next run's delta summary.")
+    e1, e2, e3 = st.columns(3)
+    if e1.button("Write reports to /output", type="primary", icon="💾"):
+        paths = fe.write_outputs(result, bundle, output_dir)
+        st.success(f"Wrote {paths['report'].name} and {paths['forecast'].name} to {output_dir}")
 e2.download_button("Download Markdown brief", fe.render_markdown_report(result, bundle),
                    file_name=fe.REPORT_FILENAME, mime="text/markdown", icon="📄")
 e3.download_button("Download forecast CSV", fe.forecast_table(result).to_csv(index=False),
