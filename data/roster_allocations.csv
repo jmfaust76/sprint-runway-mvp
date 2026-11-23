@@ -1,0 +1,19 @@
+member_id,name,role,employment_type,product_id,allocation_pct,blended_hourly_rate,weekly_hours,contract_end_date
+EMP-01,FTE Engineer 1,Tech Lead,FTE,PROD-ALPHA,100,115,40,
+EMP-02,Contractor Dev 1,Senior Backend Eng,Contractor,PROD-ALPHA,100,135,40,2026-12-18
+EMP-03,Contractor Dev 2,Frontend Eng,Contractor,PROD-ALPHA,50,120,40,2026-12-18
+EMP-03,Contractor Dev 2,Frontend Eng,Contractor,PROD-GAMMA,50,120,40,2026-12-18
+EMP-04,Contractor QA 1,QA Automation Eng,Contractor,PROD-ALPHA,100,95,40,2026-12-18
+EMP-05,FTE Product Owner 1,Product Owner,FTE,PROD-ALPHA,50,105,40,
+EMP-05,FTE Product Owner 1,Product Owner,FTE,PROD-GAMMA,50,105,40,
+EMP-06,FTE Engineer 2,Principal Architect,FTE,PROD-BETA,100,130,40,
+EMP-07,FTE Engineer 3,Senior Backend Eng,FTE,PROD-BETA,100,110,40,
+EMP-08,Contractor Dev 3,Data Engineer,Contractor,PROD-BETA,100,125,40,2027-03-31
+EMP-09,FTE QA 1,QA Engineer,FTE,PROD-BETA,100,90,40,
+EMP-10,FTE Scrum Master 1,Scrum Master,FTE,PROD-BETA,50,95,40,
+EMP-10,FTE Scrum Master 1,Scrum Master,FTE,PROD-DELTA,50,95,40,
+EMP-11,Contractor Dev 4,Backend Eng,Contractor,PROD-GAMMA,100,125,40,2026-12-15
+EMP-12,Contractor QA 2,QA Engineer,Contractor,PROD-GAMMA,100,90,40,2026-12-15
+EMP-13,FTE Engineer 4,Senior Data Eng,FTE,PROD-DELTA,100,115,40,
+EMP-14,FTE Engineer 5,BI / Frontend Eng,FTE,PROD-DELTA,100,100,40,
+EMP-15,FTE QA 2,QA Analyst,FTE,PROD-DELTA,50,85,40,

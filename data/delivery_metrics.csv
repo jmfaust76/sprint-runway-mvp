@@ -1,0 +1,5 @@
+product_id,sprint_length_weeks,avg_velocity_points,avg_throughput_items,carryover_pct,rework_pct,active_blockers,last_synced_utc
+PROD-ALPHA,2,42,14,32,18,3,2026-11-21T15:00:00Z
+PROD-BETA,2,55,19,12,6,1,2026-11-21T15:00:00Z
+PROD-GAMMA,2,30,11,38,22,4,2026-11-21T15:00:00Z
+PROD-DELTA,2,36,13,15,8,0,2026-11-21T15:00:00Z

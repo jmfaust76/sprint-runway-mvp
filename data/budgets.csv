@@ -1,0 +1,5 @@
+product_id,product_name,period_start,period_end,total_annual_budget,remaining_budget,remaining_backlog_points,target_release_note
+PROD-ALPHA,Member Portal & Self-Service,2026-01-01,2026-12-31,1400000,118000,145,"Q4 Year-End Enrollment & Profile Release"
+PROD-BETA,Claims & Billing Automation,2026-01-01,2026-12-31,1850000,310000,180,"Automated Adjudication Phase 2"
+PROD-GAMMA,Provider Directory & Search,2026-01-01,2026-12-31,950000,72000,110,"API v2 Search & Filtering Cutover"
+PROD-DELTA,Analytics & Reporting Hub,2026-01-01,2026-12-31,1100000,205000,95,"Executive Cohort & KPI Dashboards"
